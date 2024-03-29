@@ -1,108 +1,116 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Snakes & Ladders</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./index.css">
-  </head>
-  <body>
-    <div id="game-init-step" class="game-init-step">
-      <input type="hidden" id="selected-board" value="classic">
-      <div class="p-5 mb-5 has-background-white is-flex is-flex-direction-column is-align-items-center is-justify-content-center" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
-        <h1 class="title">Welcome to Snakes & Ladders</h1>
-        <div class="is-flex">
-          <input type="text" id="player-count" class="input is-medium is-success" name="player-count" value="" placeholder="Enter the number of players">
-          <button id="start-game" class="button is-success is-medium ml-3" type="button" name="start-game">
-            Start Game
-          </button>
+
+<head>
+  <meta charset="utf-8">
+  <title>Snakes & Ladders</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+  <div id="game-init-step" class="game-init-step">
+    <input type="hidden" id="selected-board" value="classic">
+    <div
+      class="p-5 mb-5 has-background-white is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
+      style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+      <h1 class="title">Welcome to Snakes & Ladders</h1>
+      <div class="is-flex">
+        <input type="text" id="player-count" class="input is-medium is-success" name="player-count" value=""
+          placeholder="Enter the number of players">
+        <button id="start-game" class="button is-success is-medium ml-3" type="button" name="start-game">
+          Start Game
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="tile is-ancestor is-hidden">
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container" data-board="easy">
+            <p class="title">Easy</p>
+            <p class="subtitle">Simple board with 3 snakes, 3 ladders and 25 places to hop on board</p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/easy.jpg">
+            </figure>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container" data-board="medium">
+            <p class="title">Medium</p>
+            <p class="subtitle">Difficulty rises, got less ladders and more snakes in this one</p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/medium.jpg">
+            </figure>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container" data-board="difficult">
+            <p class="title">Difficult</p>
+            <p class="subtitle">More snakes to avoid and less ladders to climb. This can be a real killing machine</p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/difficult.jpg">
+            </figure>
+          </article>
         </div>
       </div>
-      <div class="container">
-        <div class="tile is-ancestor">
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container" data-board="easy">
-              <p class="title">Easy</p>
-              <p class="subtitle">Simple board with 3 snakes, 3 ladders and 25 places to hop on board</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/easy.jpg">
-              </figure>
-            </article>
-          </div>
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container" data-board="medium">
-              <p class="title">Medium</p>
-              <p class="subtitle">Difficulty rises, got less ladders and more snakes in this one</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/medium.jpg">
-              </figure>
-            </article>
-          </div>
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container" data-board="difficult">
-              <p class="title">Difficult</p>
-              <p class="subtitle">More snakes to avoid and less ladders to climb. This can be a real killing machine</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/difficult.jpg">
-              </figure>
-            </article>
-          </div>
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container selected" data-board="classic">
+            <p class="title">Classic</p>
+            <p class="subtitle">The classic board that has been played through generations</p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/classic.jpg">
+            </figure>
+          </article>
         </div>
-        <div class="tile is-ancestor">
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container selected" data-board="classic">
-              <p class="title">Classic</p>
-              <p class="subtitle">The classic board that has been played through generations</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/classic.jpg">
-              </figure>
-            </article>
-          </div>
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container" data-board="rockets">
-              <p class="title">Rockets</p>
-              <p class="subtitle">Interested in skyrocketing? Get launched from two places on the board 60 places above</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/rockets.jpg">
-              </figure>
-            </article>
-          </div>
-          <div class="tile is-parent">
-            <article class="tile is-child box is-clickable board-container" data-board="dragons">
-              <p class="title">Dragons</p>
-              <p class="subtitle">Interested in Dragons? Have dragons in place of snakes, navigate through the thrill of avoiding getting burned by dragon's breath</p>
-              <figure class="image is-128x128">
-                <img src="./images/boards/dragons.jpg">
-              </figure>
-            </article>
-          </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container" data-board="rockets">
+            <p class="title">Rockets</p>
+            <p class="subtitle">Interested in skyrocketing? Get launched from two places on the board 60 places above
+            </p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/rockets.jpg">
+            </figure>
+          </article>
+        </div>
+        <div class="tile is-parent">
+          <article class="tile is-child box is-clickable board-container" data-board="dragons">
+            <p class="title">Dragons</p>
+            <p class="subtitle">Interested in Dragons? Have dragons in place of snakes, navigate through the thrill of
+              avoiding getting burned by dragon's breath</p>
+            <figure class="image is-128x128">
+              <img src="./images/boards/dragons.jpg">
+            </figure>
+          </article>
         </div>
       </div>
     </div>
-    <div id="snake-game-step" class="snake-game-step is-hidden">
-      <div class="position-relative is-flex snake-board-wrapper">
-        <div class="is-flex-shrink-0">
-          <div id="snake-board" class="is-flex position-relative mb-3 snake-board">
-            <img id="game-board-img" src="./images/boards/classic.jpg" alt="Snake Board">
-          </div>
-          <div id="initial-spacer-div" class="is-flex initial-spacer-div"></div>
+  </div>
+  <div id="snake-game-step" class="snake-game-step is-hidden">
+    <div class="position-relative is-flex snake-board-wrapper">
+      <div class="is-flex-shrink-0">
+        <div id="snake-board" class="is-flex position-relative mb-3 snake-board">
+          <img id="game-board-img" src="./images/boards/classic.jpg" alt="Snake Board">
         </div>
-        <div class="ml-3">
-          <h5 class="mb-3">Gaming time: <span id="time-passed">00:00</span></h5>
-          <h1 class="title is-2 is-spaced">Press spacebar to roll the die</h1>
-          <h3 id="current-player-turn" class="subtitle is-4"></h3>
-          <span id="current-dice-roll" class="is-hidden"></span>
-        </div>
-        <div class="ml-auto is-flex-shrink-0 width-100 logger-wrapper">
-          <h1 class="has-text-centered title">Game Log</h1>
-          <hr />
-          <div id="logger" class="p-2 logger"></div>
-        </div>
+        <div id="initial-spacer-div" class="is-flex initial-spacer-div"></div>
+      </div>
+      <div class="ml-3">
+        <h5 class="mb-3">Gaming time: <span id="time-passed">00:00</span></h5>
+        <h1 class="title is-2 is-spaced">Press spacebar to roll the die</h1>
+        <h3 id="current-player-turn" class="subtitle is-4"></h3>
+        <span id="current-dice-roll" class="is-hidden"></span>
+      </div>
+      <div class="ml-auto is-flex-shrink-0 width-100 logger-wrapper">
+        <h1 class="has-text-centered title">Game Log</h1>
+        <hr />
+        <div id="logger" class="p-2 logger"></div>
       </div>
     </div>
-    <script src="./index.js" charset="utf-8"></script>
-  </body>
+  </div>
+  <script src="./index.js" charset="utf-8"></script>
+</body>
+
 </html>

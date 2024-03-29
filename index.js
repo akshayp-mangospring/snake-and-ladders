@@ -131,7 +131,6 @@ class Constant {
       ],
     },
 
-    // This board has a special case at position 98, it has snake's head at the ladder's top
     dragons: {
       uiSpecs: {
         rowSize: 10,
@@ -146,7 +145,7 @@ class Constant {
         { head: 56, tail: 8 },
         { head: 84, tail: 64 },
         { head: 87, tail: 31 },
-        { head: 98, tail: 40 },
+        { head: 99, tail: 40 },
       ],
       laddersList: [
         { bottom: 2, top: 23 },
