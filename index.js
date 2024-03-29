@@ -298,7 +298,7 @@ class Game {
   static disableControls = false;
 
   static showCurrentTurnText() {
-    document.getElementById("current-player-turn").textContent = `${Board.currentPlayerDisplayName} player's turn`;
+    document.getElementById("current-player-turn").textContent = `${Board.currentPlayerDisplayName}'s turn`;
   }
 }
 
@@ -306,7 +306,8 @@ class Board {
   #boardData;
   #boardName;
   #playerCount;
-  #possiblePlayers;
+  #playerColors;
+  #playerNames;
 
   static currentPlayer = null;
 
@@ -316,7 +317,7 @@ class Board {
 
   static get currentPlayerDisplayName() {
     return Util.capitalize(
-      Board.currentPlayer.playerId
+      Board.currentPlayer.playerName
     );
   }
 
@@ -332,11 +333,12 @@ class Board {
     return Board.players;
   }
 
-  constructor(playerCount, boardName) {
+  constructor(playerCount, boardName, playerNames) {
     this.#playerCount = playerCount;
     this.#boardData = Constant.availableBoards[boardName];
     this.#boardName = boardName;
-    this.#possiblePlayers = ["beige", "black", "greenyellow", "salmon"];
+    this.#playerNames = playerNames.slice(0, this.#playerCount);
+    this.#playerColors = ["beige", "black", "greenyellow", "salmon"];
     this.#initializeBoardImage();
     this.#initializeNodes();
     this.#initializeSnakes();
@@ -344,7 +346,7 @@ class Board {
     this.#initializePlayers();
     this.#initializeTimer();
     Logger.addLoggerEntry("Game is ready to be played");
-    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} player's turn, ${Board.currentPlayerDisplayName} player can roll the die`);
+    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName}'s turn, ${Board.currentPlayerDisplayName} can roll the die`);
   }
 
   #initializeBoardImage() {
@@ -379,12 +381,14 @@ class Board {
   }
 
   #initializePlayers() {
-    Util.shuffleArray(this.#possiblePlayers);
+    Util.shuffleArray(this.#playerColors);
+    Util.shuffleArray(this.#playerNames);
 
     for (let i = 0; i < this.#playerCount; i++) {
-      const elem = this.#possiblePlayers[i];
+      const elem = this.#playerColors[i];
+      const playerName = this.#playerNames[i];
       const playerElem = Util.htmlElemFromString(`<div id="${elem}-player" class="player ${elem}-player" style="color: ${elem};"><i class="fas fa-chess-pawn"></i></div>`);
-      Board.players.push(new Player(elem, 0, this.#boardData.uiSpecs));
+      Board.players.push(new Player(elem, 0, this.#boardData.uiSpecs, playerName));
       document.getElementById("initial-spacer-div").appendChild(playerElem);
     }
     Logger.addLoggerEntry("Initialized Players");
@@ -485,12 +489,14 @@ class Player {
   #boardUiSpecs;;
   #currentPosition;
   #playerId;
+  #playerName;
   #movementTime;
 
-  constructor(playerId, currentPosition, boardUiSpecs) {
+  constructor(playerId, currentPosition, boardUiSpecs, playerName) {
     this.#movementTime = 500;
     this.#boardUiSpecs = boardUiSpecs;
     this.#playerId = playerId;
+    this.#playerName = playerName;
     this.#currentPosition = currentPosition;
   }
 
@@ -500,6 +506,10 @@ class Player {
 
   get playerId() {
     return this.#playerId;
+  }
+
+  get playerName() {
+    return this.#playerName;
   }
 
   #moveOnUI() {
@@ -513,8 +523,8 @@ class Player {
     const playerWon = Board.currentPlayer.currentPosition === 100;
 
     if (playerWon) {
-      Logger.addLoggerEntry(`Congratulations ${Board.currentPlayerDisplayName} player! You won the game`);
-      alert(`Congratulations ${Util.capitalize(Board.currentPlayer.playerId)} player Wins! You won the game`);
+      Logger.addLoggerEntry(`Congratulations ${Board.currentPlayerDisplayName}! You won the game`);
+      alert(`Congratulations ${Util.capitalize(Board.currentPlayer.playerId)} Wins! You won the game`);
       window.location.reload();
     }
 
@@ -526,7 +536,7 @@ class Player {
       Game.showCurrentTurnText();
       Logger.addLoggerEntry("Switching Turn");
     }
-    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} player's turn, ${Board.currentPlayerDisplayName} player can roll the die`);
+    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName}'s turn, ${Board.currentPlayerDisplayName} can roll the die`);
 
     Dice.resetCurrentDiceRoll();
     Game.disableControls = false;
@@ -677,8 +687,10 @@ const initGame = () => {
   document.getElementById("snake-game-step").classList.add(`${document.getElementById("selected-board").value
     }-snake-board`);
 
+  const playerNames = Array.from(document.getElementsByClassName('player-name-input')).map(({ value }) => value);
+
   // Initialize the game with number of players
-  return new Board(playerCount, document.getElementById("selected-board").value);
+  return new Board(playerCount, document.getElementById("selected-board").value, playerNames);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
