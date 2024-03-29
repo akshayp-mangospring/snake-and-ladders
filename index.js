@@ -381,15 +381,18 @@ class Board {
   }
 
   #initializePlayers() {
+    const playerColorsContainer = document.getElementById('player-colors');
+
     Util.shuffleArray(this.#playerColors);
     Util.shuffleArray(this.#playerNames);
 
     for (let i = 0; i < this.#playerCount; i++) {
-      const elem = this.#playerColors[i];
-      const playerName = this.#playerNames[i];
-      const playerElem = Util.htmlElemFromString(`<div id="${elem}-player" class="player ${elem}-player" style="color: ${elem};"><i class="fas fa-chess-pawn"></i></div>`);
-      Board.players.push(new Player(elem, 0, this.#boardData.uiSpecs, playerName));
+      const color = this.#playerColors[i];
+      const name = this.#playerNames[i];
+      const playerElem = Util.htmlElemFromString(`<div id="${color}-player" class="player ${color}-player" style="color: ${color};"><i class="fas fa-chess-pawn"></i></div>`);
+      Board.players.push(new Player(color, 0, this.#boardData.uiSpecs, name));
       document.getElementById("initial-spacer-div").appendChild(playerElem);
+      playerColorsContainer.appendChild(Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${name}</span> - ${Util.capitalize(color)}</p>`));
     }
     Logger.addLoggerEntry("Initialized Players");
     Board.currentPlayer = Board.players[0];
