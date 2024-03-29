@@ -162,6 +162,7 @@ class Constant {
 
 class Util {
   static spacebarKeyCode = 32;
+  static enterKeyCode = 13;
 
   static htmlElemFromString(htmlStr) {
     const parser = new DOMParser();
@@ -179,6 +180,10 @@ class Util {
 
   static isSpacebarPressed(e) {
     return e.keyCode === this.spacebarKeyCode;
+  }
+
+  static isEnterPressed(e) {
+    return e.keyCode === this.enterKeyCode;
   }
 
   static padToTwoDigits = (digit) => (`0${digit}`).slice(-2);
@@ -643,38 +648,50 @@ class EventListener {
   }
 }
 
+const initGame = () => {
+  const playerCountInput = document.getElementById("player-count");
+
+  const playerCount = Math.abs(
+    parseInt(
+      playerCountInput.value, 10
+    )
+  );
+
+  if (isNaN(playerCount)) {
+    alert("Enter a valid number");
+    throw new Error("Halted game execution");
+  }
+
+  if (playerCount > 4) {
+    alert("Max 4 players can play the game");
+    throw new Error("Halted game execution");
+  }
+
+  if (playerCount <= 1) {
+    alert("Min 2 players can play the game");
+    throw new Error("Halted game execution");
+  }
+
+  document.getElementById("game-init-step").classList.add("is-hidden");
+  document.getElementById("snake-game-step").classList.remove("is-hidden");
+  document.getElementById("snake-game-step").classList.add(`${document.getElementById("selected-board").value
+    }-snake-board`);
+
+  // Initialize the game with number of players
+  return new Board(playerCount, document.getElementById("selected-board").value);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   let snakeBoard = null;
+  const playerCountInput = document.getElementById("player-count");
 
   document.getElementById("start-game").addEventListener("click", () => {
-    const playerCount = Math.abs(
-      parseInt(
-        document.getElementById("player-count").value, 10
-      )
-    );
+    snakeBoard = initGame();
+  });
 
-    if (isNaN(playerCount)) {
-      alert("Enter a valid number");
-      throw new Error("Halted game execution");
-    }
-
-    if (playerCount > 4) {
-      alert("Max 4 players can play the game");
-      throw new Error("Halted game execution");
-    }
-
-    if (playerCount <= 1) {
-      alert("Min 2 players can play the game");
-      throw new Error("Halted game execution");
-    }
-
-    // Initialize the number of players
-    snakeBoard = new Board(playerCount, document.getElementById("selected-board").value);
-
-    document.getElementById("game-init-step").classList.add("is-hidden");
-    document.getElementById("snake-game-step").classList.remove("is-hidden");
-    document.getElementById("snake-game-step").classList.add(`${document.getElementById("selected-board").value
-      }-snake-board`);
+  playerCountInput.addEventListener("keypress", (e) => {
+    if (!Util.isEnterPressed(e)) return;
+    snakeBoard = initGame();
   });
 
   const boardsList = Array.from(
@@ -696,4 +713,6 @@ document.addEventListener("DOMContentLoaded", () => {
       Board.currentPlayer.moveUponDiceRoll(snakeBoard.dice.rollDice());
     }
   }
+
+  playerCountInput.focus();
 });
