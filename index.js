@@ -123,6 +123,8 @@ class Util {
     return e.keyCode === this.enterKeyCode;
   }
 
+  static removeFirstChar = (s) => s.substring(1);
+
   static sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
   static padToTwoDigits = (digit) => (`0${digit}`).slice(-2);
@@ -168,12 +170,12 @@ class Game {
   static disableControls = false;
 
   static showCurrentTurnText() {
-    document.getElementById("current-player-turn").textContent = `${Util.capitalize(Board.currentPlayerDisplayName)}'s turn`;
+    document.getElementById("current-player-turn").textContent = `${Board.currentPlayerDisplayName}'s turn`;
   }
 
   static showGameWinner = () => {
     document.getElementById("game-won-wrapper").classList.remove("is-hidden");
-    document.getElementById("game-winner-name").textContent = `${Util.capitalize(Board.currentPlayerDisplayName)}`
+    document.getElementById("game-winner-name").textContent = `${Board.currentPlayerDisplayName}`
   };
 }
 
@@ -263,11 +265,14 @@ class Board {
 
     for (let i = 0; i < this.#playerCount; i++) {
       const color = this.#playerColors[i];
+      const idOfPlayer = Util.removeFirstChar(color);
       const name = this.#playerNames[i];
-      const playerElem = Util.htmlElemFromString(`<div id="${color}-player" class="player ${color}-player" style="color: ${color};"><i class="fas fa-chess-pawn"></i></div>`);
-      Board.players.push(new Player(color, 0, this.#boardData.uiSpecs, name));
+      const playerElem = Util.htmlElemFromString(`<div id="${idOfPlayer}-player" class="player ${idOfPlayer}-player" style="color: ${color};"><i class="fas fa-chess-pawn"></i></div>`);
+      Board.players.push(new Player(idOfPlayer, 0, this.#boardData.uiSpecs, name));
       document.getElementById("initial-spacer-div").appendChild(playerElem);
-      playerColorsContainer.appendChild(Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${Util.capitalize(name)}</span> - ${Util.capitalize(color)}</p>`));
+      playerColorsContainer.appendChild(
+        Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${name}</span> - ${Util.capitalize(color)}, @<span id="${idOfPlayer}-position">0</span></p>`)
+      );
     }
     Logger.addLoggerEntry("Initialized Players");
     Board.currentPlayer = Board.players[0];
@@ -397,11 +402,16 @@ class Player {
     elem.style.left = `${x}px`;
   }
 
+  #updateCurrentPlayerPosition() {
+    const currentPlayerPositionElem = document.getElementById(`${Board.currentPlayer.#playerId}-position`);
+    currentPlayerPositionElem.innerText = Board.currentPlayer.#currentPosition;
+  }
+
   async #updatePlayerTurn(playerId, shouldUpdatePlayer = true) {
     const playerWon = Board.currentPlayer.currentPosition === 100;
 
     if (playerWon) {
-      Logger.addLoggerEntry(`Congratulations ${Util.capitalize(Board.currentPlayerDisplayName)}! You won the game`);
+      Logger.addLoggerEntry(`Congratulations ${Board.currentPlayerDisplayName}! You won the game`);
       Game.disableControls = true;
       Game.showGameWinner();
       await Util.sleep(20000);
@@ -417,7 +427,7 @@ class Player {
       Game.showCurrentTurnText();
       Logger.addLoggerEntry("Switching Turn");
     }
-    Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)}'s turn, ${Util.capitalize(Board.currentPlayerDisplayName)} can roll the die`);
+    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName}'s turn, ${Board.currentPlayerDisplayName} can roll the die`);
 
     Dice.resetCurrentDiceRoll();
     Game.disableControls = false;
@@ -438,19 +448,21 @@ class Player {
     }
 
     if (diceRollOverflowsBoard) {
-      Logger.addLoggerEntry(`Die rolled ${diceRoll}. Die roll overflow, can't move ahead. ${Util.capitalize(Board.currentPlayerDisplayName)} needs ${100 - this.#currentPosition} to win the game`);
+      Logger.addLoggerEntry(`Die rolled ${diceRoll}. Die roll overflow, can't move ahead. ${Board.currentPlayerDisplayName} needs ${100 - this.#currentPosition} to win the game`);
       if (shouldGetDoubleChance) {
-        Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Util.capitalize(Board.currentPlayerDisplayName)} gets an extra die roll`);
+        Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Board.currentPlayerDisplayName} gets an extra die roll`);
         await Util.sleep(1000);
+        this.#updateCurrentPlayerPosition();
         this.#updatePlayerTurn(this.#playerId, false);
         return;
       }
       await Util.sleep(2000);
+      this.#updateCurrentPlayerPosition();
       this.#updatePlayerTurn(this.#playerId);
       return;
     }
 
-    Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)} is moving on the board`);
+    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} is moving on the board`);
 
     let counter = 0;
     let looper = setInterval(() => {
@@ -465,8 +477,9 @@ class Player {
 
         // Post movement checks
         if (currentNode.hasSnakeHead()) {
-          Logger.addLoggerEntry(`Aww, ${Util.capitalize(Board.currentPlayerDisplayName)} got bit by a snake`);
+          Logger.addLoggerEntry(`Aww, ${Board.currentPlayerDisplayName} got bit by a snake`);
           this.#currentPosition = currentNode.snake.tail;
+          this.#updateCurrentPlayerPosition();
           this.#updatePlayerTurn(this.#playerId);
           setTimeout(() => {
             this.#moveOnUI();
@@ -475,8 +488,9 @@ class Player {
         }
 
         if (currentNode.hasLadderBottom()) {
-          Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)} climbed a ladder, gets an extra die roll`);
+          Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} climbed a ladder, gets an extra die roll`);
           this.#currentPosition = currentNode.ladder.top;
+          this.#updateCurrentPlayerPosition();
           this.#updatePlayerTurn(this.#playerId, false);
           setTimeout(() => {
             this.#moveOnUI();
@@ -485,11 +499,13 @@ class Player {
         }
 
         if (shouldGetDoubleChance) {
-          Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Util.capitalize(Board.currentPlayerDisplayName)} gets an extra die roll`);
+          Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Board.currentPlayerDisplayName} gets an extra die roll`);
+          this.#updateCurrentPlayerPosition();
           this.#updatePlayerTurn(this.#playerId, false);
           return;
         }
 
+        this.#updateCurrentPlayerPosition();
         this.#updatePlayerTurn(this.#playerId);
       }
     }, this.#movementTime);
@@ -570,7 +586,9 @@ const initGame = () => {
   document.getElementById("snake-game-step").classList.add(`${document.getElementById("selected-board").value
     }-snake-board`);
 
-  const playerNames = Array.from(document.getElementsByClassName('player-name-input')).map(({ value }) => value);
+  const playerNames = Array.from(
+    document.getElementsByClassName('player-name-input')
+  ).map(({ value }) => Util.capitalize(value));
 
   // Initialize the game with number of players
   return new Board(playerCount, document.getElementById("selected-board").value, playerNames);
