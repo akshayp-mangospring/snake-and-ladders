@@ -1,78 +1,5 @@
 class Constant {
   static availableBoards = {
-    easy: {
-      uiSpecs: {
-        rowSize: 5,
-        rowCount: 5,
-        nodeSizeInPx: 90,
-        verticalOffsetInPx: 36,
-        horizontalOffsetInPx: 40,
-      },
-      snakesList: [
-        { head: 6, tail: 4 },
-        { head: 20, tail: 9 },
-        { head: 22, tail: 17 },
-      ],
-      laddersList: [
-        { bottom: 2, top: 8 },
-        { bottom: 10, top: 18 },
-        { bottom: 15, top: 17 },
-      ],
-    },
-
-    medium: {
-      uiSpecs: {
-        rowSize: 10,
-        rowCount: 10,
-        nodeSizeInPx: 61,
-        verticalOffsetInPx: 11,
-        horizontalOffsetInPx: 19,
-      },
-      snakesList: [
-        { head: 38, tail: 20 },
-        { head: 51, tail: 10 },
-        { head: 76, tail: 54 },
-        { head: 91, tail: 73 },
-        { head: 97, tail: 61 },
-      ],
-      laddersList: [
-        { bottom: 5, top: 58 },
-        { bottom: 14, top: 49 },
-        { bottom: 53, top: 72 },
-        { bottom: 64, top: 83 },
-      ],
-    },
-
-    difficult: {
-      uiSpecs: {
-        rowSize: 10,
-        rowCount: 10,
-        nodeSizeInPx: 59,
-        verticalOffsetInPx: 13,
-        horizontalOffsetInPx: 23,
-      },
-      snakesList: [
-        { head: 17, tail: 7 },
-        { head: 54, tail: 34 },
-        { head: 62, tail: 19 },
-        { head: 64, tail: 60 },
-        { head: 87, tail: 36 },
-        { head: 93, tail: 73 },
-        { head: 95, tail: 75 },
-        { head: 98, tail: 79 },
-      ],
-      laddersList: [
-        { bottom: 1, top: 38 },
-        { bottom: 4, top: 14 },
-        { bottom: 9, top: 31 },
-        { bottom: 21, top: 42 },
-        { bottom: 28, top: 84 },
-        { bottom: 51, top: 67 },
-        { bottom: 72, top: 91 },
-        { bottom: 80, top: 99 },
-      ],
-    },
-
     classic: {
       uiSpecs: {
         rowSize: 10,
@@ -158,6 +85,16 @@ class Constant {
       ],
     },
   };
+
+  static dieRollsHtml = {
+    0: '<div></div>',
+    1: '<div class="dice first-face"><span class="dot"></span></div>',
+    2: '<div class="dice second-face"><span class="dot"></span><span class="dot"></span></div>',
+    3: '<div class="dice third-face"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>',
+    4: '<div class="fourth-face dice"><div class="dice-column"><span class="dot"></span><span class="dot"></span></div><div class="dice-column"><span class="dot"></span><span class="dot"></span></div></div>',
+    5: '<div class="fifth-face dice"><div class="dice-column"><span class="dot"></span><span class="dot"></span></div><div class="dice-column"><span class="dot"></span></div><div class="dice-column"><span class="dot"></span><span class="dot"></span></div></div>',
+    6: '<div class="sixth-face dice"><div class="dice-column"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="dice-column"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>',
+  };
 }
 
 class Util {
@@ -186,81 +123,14 @@ class Util {
     return e.keyCode === this.enterKeyCode;
   }
 
+  static sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
   static padToTwoDigits = (digit) => (`0${digit}`).slice(-2);
 }
 
 class Dice {
   static getDiceFaceHtml(diceRoll) {
-    let diceFaceHtml = ``;
-    switch (diceRoll) {
-      case 1:
-        diceFaceHtml = `<div class="dice first-face">
-          <span class="dot">
-          </span>
-        </div>`;
-        break;
-      case 2:
-        diceFaceHtml = `<div class="dice second-face">
-          <span class="dot">
-          </span>
-          <span class="dot">
-          </span>
-        </div>`;
-        break;
-      case 3:
-        diceFaceHtml = `<div class="dice third-face">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>`;
-        break;
-      case 4:
-        diceFaceHtml = `<div class="fourth-face dice">
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        </div>`;
-        break;
-      case 5:
-        diceFaceHtml = `<div class="fifth-face dice">
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          <div class="dice-column">
-            <span class="dot"></span>
-          </div>
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        </div>`;
-        break;
-      case 6:
-        diceFaceHtml = `<div class="sixth-face dice">
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          <div class="dice-column">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        </div>`;
-        break;
-      default:
-        diceFaceHtml = `<div class="dice"></div>`;
-        break;
-    }
-
-    return diceFaceHtml.replace(/(\r\n|\n|\r|\t)/gm, "");
+    return Constant.dieRollsHtml[diceRoll];
   }
 
   static showCurrentDiceRoll(diceRoll) {
@@ -338,7 +208,7 @@ class Board {
     this.#boardData = Constant.availableBoards[boardName];
     this.#boardName = boardName;
     this.#playerNames = playerNames.slice(0, this.#playerCount);
-    this.#playerColors = ["beige", "black", "greenyellow", "salmon"];
+    this.#playerColors = ["#ffd54f", "#9fa9db", "#a4d7a7", "#ef9b9b"];
     this.#initializeBoardImage();
     this.#initializeNodes();
     this.#initializeSnakes();
@@ -392,7 +262,7 @@ class Board {
       const playerElem = Util.htmlElemFromString(`<div id="${color}-player" class="player ${color}-player" style="color: ${color};"><i class="fas fa-chess-pawn"></i></div>`);
       Board.players.push(new Player(color, 0, this.#boardData.uiSpecs, name));
       document.getElementById("initial-spacer-div").appendChild(playerElem);
-      playerColorsContainer.appendChild(Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${name}</span> - ${Util.capitalize(color)}</p>`));
+      playerColorsContainer.appendChild(Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${Util.capitalize(name)}</span> - ${Util.capitalize(color)}</p>`));
     }
     Logger.addLoggerEntry("Initialized Players");
     Board.currentPlayer = Board.players[0];
@@ -522,12 +392,12 @@ class Player {
     elem.style.left = `${x}px`;
   }
 
-  #updatePlayerTurn(playerId, shouldUpdatePlayer = true) {
+  async #updatePlayerTurn(playerId, shouldUpdatePlayer = true) {
     const playerWon = Board.currentPlayer.currentPosition === 100;
 
     if (playerWon) {
-      Logger.addLoggerEntry(`Congratulations ${Board.currentPlayerDisplayName}! You won the game`);
-      alert(`Congratulations ${Util.capitalize(Board.currentPlayer.playerId)} Wins! You won the game`);
+      Logger.addLoggerEntry(`Congratulations ${Util.capitalize(Board.currentPlayerDisplayName)}! You won the game`);
+      alert(`Congratulations ${Util.capitalize(Board.currentPlayerDisplayName)} Wins! You won the game`);
       window.location.reload();
     }
 
@@ -536,16 +406,17 @@ class Player {
       const currentIndex = boardPlayerIds.indexOf(playerId);
       const nextIndex = (currentIndex + 1) % Board.players.length;
       Board.currentPlayer = Board.players[nextIndex];
+      await Util.sleep(1000);
       Game.showCurrentTurnText();
       Logger.addLoggerEntry("Switching Turn");
     }
-    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName}'s turn, ${Board.currentPlayerDisplayName} can roll the die`);
+    Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)}'s turn, ${Util.capitalize(Board.currentPlayerDisplayName)} can roll the die`);
 
     Dice.resetCurrentDiceRoll();
     Game.disableControls = false;
   }
 
-  moveUponDiceRoll(diceRoll) {
+  async moveUponDiceRoll(diceRoll) {
     Dice.showCurrentDiceRoll(diceRoll);
     Logger.addLoggerEntry(`Die rolled ${diceRoll}`);
 
@@ -560,17 +431,19 @@ class Player {
     }
 
     if (diceRollOverflowsBoard) {
-      Logger.addLoggerEntry(`Die rolled ${diceRoll}. Die roll overflow, can't move ahead. ${Board.currentPlayerDisplayName} needs ${100 - this.#currentPosition} to win the game`);
+      Logger.addLoggerEntry(`Die rolled ${diceRoll}. Die roll overflow, can't move ahead. ${Util.capitalize(Board.currentPlayerDisplayName)} needs ${100 - this.#currentPosition} to win the game`);
       if (shouldGetDoubleChance) {
-        Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Board.currentPlayerDisplayName} gets an extra die roll`);
+        Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Util.capitalize(Board.currentPlayerDisplayName)} gets an extra die roll`);
+        await Util.sleep(1000);
         this.#updatePlayerTurn(this.#playerId, false);
         return;
       }
+      await Util.sleep(2000);
       this.#updatePlayerTurn(this.#playerId);
       return;
     }
 
-    Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} is moving on the board`);
+    Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)} is moving on the board`);
 
     let counter = 0;
     let looper = setInterval(() => {
@@ -585,7 +458,7 @@ class Player {
 
         // Post movement checks
         if (currentNode.hasSnakeHead()) {
-          Logger.addLoggerEntry(`Aww, ${Board.currentPlayerDisplayName} got bit by a snake`);
+          Logger.addLoggerEntry(`Aww, ${Util.capitalize(Board.currentPlayerDisplayName)} got bit by a snake`);
           this.#currentPosition = currentNode.snake.tail;
           this.#updatePlayerTurn(this.#playerId);
           setTimeout(() => {
@@ -595,7 +468,7 @@ class Player {
         }
 
         if (currentNode.hasLadderBottom()) {
-          Logger.addLoggerEntry(`${Board.currentPlayerDisplayName} climbed a ladder, gets an extra die roll`);
+          Logger.addLoggerEntry(`${Util.capitalize(Board.currentPlayerDisplayName)} climbed a ladder, gets an extra die roll`);
           this.#currentPosition = currentNode.ladder.top;
           this.#updatePlayerTurn(this.#playerId, false);
           setTimeout(() => {
@@ -605,7 +478,7 @@ class Player {
         }
 
         if (shouldGetDoubleChance) {
-          Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Board.currentPlayerDisplayName} gets an extra die roll`);
+          Logger.addLoggerEntry(`Die rolled ${diceRoll}, ${Util.capitalize(Board.currentPlayerDisplayName)} gets an extra die roll`);
           this.#updatePlayerTurn(this.#playerId, false);
           return;
         }
