@@ -64,6 +64,17 @@
   left: 19px;
 }
 
+.game-won-wrapper {
+  background-image: url(./images/win.gif);
+  background-color: rgba(211, 211, 211, 0.6);
+  background-position: center bottom;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 /* Dice */
 .dice {
   padding: 16px;

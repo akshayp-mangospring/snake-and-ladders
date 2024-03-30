@@ -15,7 +15,7 @@
 
 <body>
   <div id="game-init-step" class="game-init-step">
-    <input type="hidden" id="selected-board" value="classic">
+    <input type="hidden" id="selected-board" value="rockets">
     <div
       class="p-5 mb-5 has-background-white is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
       style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
@@ -54,7 +54,7 @@
     <div class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
-          <article class="tile is-child box is-clickable board-container selected" data-board="classic">
+          <article class="tile is-child box is-clickable board-container" data-board="classic">
             <p class="title">Classic</p>
             <p class="subtitle">The classic board that has been played through generations</p>
             <figure class="image is-128x128">
@@ -63,7 +63,7 @@
           </article>
         </div>
         <div class="tile is-parent">
-          <article class="tile is-child box is-clickable board-container" data-board="rockets">
+          <article class="tile is-child box is-clickable board-container selected" data-board="rockets">
             <p class="title">Rockets</p>
             <p class="subtitle">Interested in skyrocketing? Get launched from two places on the board 60 places above
             </p>
@@ -116,6 +116,12 @@
         <hr />
         <div id="logger" class="p-2 logger"></div>
       </div>
+    </div>
+  </div>
+  <div id="game-won-wrapper" class="game-won-wrapper is-hidden">
+    <div class="p-5 has-background-white">
+      <h1 class="is-size-1 has-text-centered">Congratulations!</h1>
+      <h1 class="is-size-1 has-text-centered"><span id="game-winner-name"></span> has won the game!</h1>
     </div>
   </div>
   <script type="module" src="/index.js" charset="utf-8"></script>

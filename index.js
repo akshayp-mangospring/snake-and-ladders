@@ -168,8 +168,13 @@ class Game {
   static disableControls = false;
 
   static showCurrentTurnText() {
-    document.getElementById("current-player-turn").textContent = `${Board.currentPlayerDisplayName}'s turn`;
+    document.getElementById("current-player-turn").textContent = `${Util.capitalize(Board.currentPlayerDisplayName)}'s turn`;
   }
+
+  static showGameWinner = () => {
+    document.getElementById("game-won-wrapper").classList.remove("is-hidden");
+    document.getElementById("game-winner-name").textContent = `${Util.capitalize(Board.currentPlayerDisplayName)}`
+  };
 }
 
 class Board {
@@ -397,7 +402,9 @@ class Player {
 
     if (playerWon) {
       Logger.addLoggerEntry(`Congratulations ${Util.capitalize(Board.currentPlayerDisplayName)}! You won the game`);
-      alert(`Congratulations ${Util.capitalize(Board.currentPlayerDisplayName)} Wins! You won the game`);
+      Game.disableControls = true;
+      Game.showGameWinner();
+      await Util.sleep(20000);
       window.location.reload();
     }
 
