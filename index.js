@@ -175,7 +175,8 @@ class Game {
 
   static showGameWinner = () => {
     document.getElementById("game-won-wrapper").classList.remove("is-hidden");
-    document.getElementById("game-winner-name").textContent = `${Board.currentPlayerDisplayName}`
+    document.getElementById("game-winner-name").textContent = `${Board.currentPlayerDisplayName}`;
+    document.getElementById('bottom-game-summary').innerHTML = document.getElementById('player-colors').innerHTML;
   };
 }
 

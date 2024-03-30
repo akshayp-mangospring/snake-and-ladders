@@ -75,6 +75,12 @@
   right: 0;
 }
 
+.bottom-game-summary {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 /* Dice */
 .dice {
   padding: 16px;
