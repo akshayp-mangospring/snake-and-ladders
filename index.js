@@ -215,7 +215,21 @@ class Board {
     this.#boardData = Constant.availableBoards[boardName];
     this.#boardName = boardName;
     this.#playerNames = playerNames.slice(0, this.#playerCount);
-    this.#playerColors = ["#ffd54f", "#9fa9db", "#a4d7a7", "#ef9b9b"];
+    this.#playerColors = [
+      {
+        hexColor: "#ffd54f",
+        readableColor: 'Yellow'
+      }, {
+        hexColor: "#9fa9db",
+        readableColor: 'Gray'
+      }, {
+        hexColor: "#a4d7a7",
+        readableColor: 'Green'
+      }, {
+        hexColor: "#ef9b9b",
+        readableColor: 'Pink'
+      }
+    ];
     this.#initializeBoardImage();
     this.#initializeNodes();
     this.#initializeSnakes();
@@ -264,14 +278,14 @@ class Board {
     Util.shuffleArray(this.#playerNames);
 
     for (let i = 0; i < this.#playerCount; i++) {
-      const color = this.#playerColors[i];
-      const idOfPlayer = Util.removeFirstChar(color);
+      const { hexColor, readableColor } = this.#playerColors[i];
+      const idOfPlayer = Util.removeFirstChar(hexColor);
       const name = this.#playerNames[i];
-      const playerElem = Util.htmlElemFromString(`<div id="${idOfPlayer}-player" class="player ${idOfPlayer}-player" style="color: ${color};"><i class="fas fa-chess-pawn"></i></div>`);
+      const playerElem = Util.htmlElemFromString(`<div id="${idOfPlayer}-player" class="player ${idOfPlayer}-player" style="color: ${hexColor};"><i class="fas fa-chess-pawn"></i></div>`);
       Board.players.push(new Player(idOfPlayer, 0, this.#boardData.uiSpecs, name));
       document.getElementById("initial-spacer-div").appendChild(playerElem);
       playerColorsContainer.appendChild(
-        Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${name}</span> - ${Util.capitalize(color)}, @<span id="${idOfPlayer}-position">0</span></p>`)
+        Util.htmlElemFromString(`<p><span class="has-text-weight-semibold">${name}</span> - ${readableColor}, @<span id="${idOfPlayer}-position">0</span></p>`)
       );
     }
     Logger.addLoggerEntry("Initialized Players");
