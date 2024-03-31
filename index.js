@@ -429,7 +429,7 @@ class Player {
       Logger.addLoggerEntry(`Congratulations ${Board.currentPlayerDisplayName}! You won the game`);
       Game.disableControls = true;
       Game.showGameWinner();
-      await Util.sleep(20000);
+      await Util.sleep(60000);
       window.location.reload();
     }
 
