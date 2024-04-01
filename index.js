@@ -222,7 +222,7 @@ class Board {
         readableColor: 'Yellow'
       }, {
         hexColor: "#9fa9db",
-        readableColor: 'Gray'
+        readableColor: 'Lavender'
       }, {
         hexColor: "#a4d7a7",
         readableColor: 'Green'
